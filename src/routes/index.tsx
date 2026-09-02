@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import capa from "@/assets/capa.png.asset.json";
 import verso from "@/assets/verso.png.asset.json";
 
-const KIWIFY_URL = "https://pay.kiwify.com.br/";
+const KIWIFY_URL = "https://pay.kiwify.com.br/DFqQy5C";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -251,6 +251,8 @@ function Index() {
 
               <a
                 href={KIWIFY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="cta-toy animate-pulse-toy font-display mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full px-8 py-5 text-2xl font-extrabold"
               >
                 COMPRAR AGORA 🎉
