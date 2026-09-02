@@ -142,3 +142,82 @@
     color: var(--color-foreground);
   }
 }
+
+/* ===== Tema infantil bíblico ===== */
+:root {
+  --background: oklch(0.98 0.02 240);
+  --foreground: oklch(0.28 0.11 264);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.28 0.11 264);
+  --primary: oklch(0.62 0.19 35);
+  --primary-foreground: oklch(0.99 0.01 90);
+  --secondary: oklch(0.88 0.13 95);
+  --secondary-foreground: oklch(0.3 0.1 60);
+  --accent: oklch(0.72 0.17 150);
+  --accent-foreground: oklch(0.99 0.01 90);
+  --muted: oklch(0.95 0.03 240);
+  --muted-foreground: oklch(0.5 0.06 260);
+  --border: oklch(0.9 0.04 240);
+  --ring: oklch(0.62 0.19 35);
+  --radius: 1.25rem;
+  --sky: oklch(0.85 0.11 235);
+  --navy: oklch(0.32 0.12 264);
+  --grass: oklch(0.72 0.17 145);
+  --sun: oklch(0.88 0.16 92);
+  --gradient-sky: linear-gradient(180deg, oklch(0.88 0.1 232), oklch(0.95 0.06 220));
+  --gradient-cta: linear-gradient(135deg, oklch(0.68 0.2 45), oklch(0.6 0.21 25));
+  --shadow-toy: 0 14px 0 -4px oklch(0.55 0.16 30 / 0.35), 0 24px 40px -18px oklch(0.3 0.1 260 / 0.5);
+  --shadow-card: 0 20px 50px -22px oklch(0.3 0.1 260 / 0.55);
+}
+
+@theme inline {
+  --color-sky: var(--sky);
+  --color-navy: var(--navy);
+  --color-grass: var(--grass);
+  --color-sun: var(--sun);
+  --font-display: "Baloo 2", system-ui, sans-serif;
+  --font-sans: "Nunito", system-ui, sans-serif;
+}
+
+body { font-family: var(--font-sans); }
+h1, h2, h3, .font-display { font-family: var(--font-display); }
+
+@utility sky-bg { background: var(--gradient-sky); }
+@utility cta-toy {
+  background: var(--gradient-cta);
+  color: var(--primary-foreground);
+  box-shadow: var(--shadow-toy);
+  transition: transform .18s ease, box-shadow .18s ease;
+  &:hover { transform: translateY(-3px) scale(1.02); }
+  &:active { transform: translateY(3px); box-shadow: 0 6px 0 -3px oklch(0.55 0.16 30 / 0.35); }
+}
+@utility card-toy {
+  background: var(--card);
+  border: 3px dashed var(--border);
+  box-shadow: var(--shadow-card);
+}
+
+@keyframes float-soft { 0%,100% { transform: translateY(0) rotate(-1deg);} 50% { transform: translateY(-14px) rotate(1deg);} }
+@keyframes wiggle { 0%,100%{transform:rotate(-2deg)} 50%{transform:rotate(2deg)} }
+@keyframes pop-in { 0%{opacity:0; transform:scale(.9) translateY(20px)} 100%{opacity:1; transform:scale(1) translateY(0)} }
+@keyframes shine { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+@keyframes cloud-drift { from { transform: translateX(-10%);} to { transform: translateX(110%);} }
+@keyframes pulse-toy { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
+
+@utility animate-float-soft { animation: float-soft 5s ease-in-out infinite; }
+@utility animate-wiggle { animation: wiggle 2.4s ease-in-out infinite; }
+@utility animate-pop-in { animation: pop-in .6s cubic-bezier(.34,1.56,.64,1) both; }
+@utility animate-pulse-toy { animation: pulse-toy 1.8s ease-in-out infinite; }
+@utility animate-cloud { animation: cloud-drift 40s linear infinite; }
+
+/* Livrinho 3D */
+@utility book-scene { perspective: 1800px; }
+@utility book-3d {
+  transform-style: preserve-3d;
+  transition: transform .9s cubic-bezier(.4,0,.2,1);
+}
+@utility book-face {
+  backface-visibility: hidden;
+  position: absolute;
+  inset: 0;
+}
