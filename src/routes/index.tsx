@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import capa from "@/assets/capa.png.asset.json";
 import verso from "@/assets/verso.png.asset.json";
 
-const KIWIFY_URL = "https://pay.kiwify.com.br/";
+const KIWIFY_URL = "https://pay.kiwify.com.br/DFqQy5C";
 
 export const Route = createFileRoute("/")({
   head: () => ({
