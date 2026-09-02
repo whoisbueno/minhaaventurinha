@@ -251,6 +251,8 @@ function Index() {
 
               <a
                 href={KIWIFY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="cta-toy animate-pulse-toy font-display mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full px-8 py-5 text-2xl font-extrabold"
               >
                 COMPRAR AGORA 🎉
