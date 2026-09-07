@@ -213,11 +213,14 @@ h1, h2, h3, .font-display { font-family: var(--font-display); }
 /* Livrinho 3D */
 @utility book-scene { perspective: 1800px; }
 @utility book-3d {
+  -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
   transition: transform .9s cubic-bezier(.4,0,.2,1);
 }
 @utility book-face {
+  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   position: absolute;
   inset: 0;
+  transform: translateZ(0);
 }
