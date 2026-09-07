@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import capa from "@/assets/capa.png.asset.json";
-import verso from "@/assets/verso.png.asset.json";
 
 const KIWIFY_URL = "https://pay.kiwify.com.br/DFqQy5C";
 
@@ -90,12 +88,12 @@ function Book() {
           style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(-12deg)" }}
         >
           <img
-            src={capa.url}
+            src="/images/capa.webp"
             alt="Capa do livro de colorir Minha Aventurinha com a Bíblia"
             className="book-face h-full w-full rounded-2xl object-cover shadow-[var(--shadow-card)]"
           />
           <img
-            src={verso.url}
+            src="/images/verso.webp"
             alt="Verso do livro com a lista de tudo que vem dentro"
             className="book-face h-full w-full rounded-2xl object-cover shadow-[var(--shadow-card)]"
             style={{ transform: "rotateY(180deg)" }}
