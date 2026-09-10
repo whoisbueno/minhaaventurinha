@@ -149,7 +149,7 @@ function Book() {
       </div>
 
       <p className="mt-3 text-center text-sm font-bold text-navy/70">
-        📖 {paginas[i]!.label} • folheie o livrinho de demonstração
+        📖 {paginas[i]!.label} • toque no livrinho ou nas setas para folhear
       </p>
     </div>
   );
