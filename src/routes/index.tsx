@@ -74,34 +74,81 @@ function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
   );
 }
 
+const paginas = [
+  { src: "/images/capa.webp", label: "Capa" },
+  { src: "/images/pag1.webp", label: "Página 1 — A Criação" },
+  { src: "/images/pag2.webp", label: "Página 2 — Caça-palavras" },
+  { src: "/images/pag3.webp", label: "Página 3 — Noé e a Arca" },
+  { src: "/images/verso.webp", label: "Verso" },
+];
+
 function Book() {
-  const [flipped, setFlipped] = useState(false);
+  const [i, setI] = useState(0);
+  const [turning, setTurning] = useState(false);
+  const total = paginas.length;
+
+  const go = (dir: number) => {
+    setTurning(true);
+    setTimeout(() => {
+      setI((p) => (p + dir + total) % total);
+      setTurning(false);
+    }, 260);
+  };
+
+  const noSave = {
+    onContextMenu: (e: React.MouseEvent) => e.preventDefault(),
+    onDragStart: (e: React.DragEvent) => e.preventDefault(),
+  };
+
   return (
     <div className="book-scene mx-auto w-full max-w-[340px] select-none">
-      <button
-        onClick={() => setFlipped((f) => !f)}
-        aria-label="Virar o livro"
-        className="animate-float-soft block w-full"
-      >
+      <div className="animate-float-soft">
         <div
-          className="book-3d relative aspect-[1035/1500] w-full"
-          style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(-12deg)" }}
+          {...noSave}
+          className="book-page relative aspect-[1035/1500] w-full rounded-2xl bg-card shadow-[var(--shadow-card)]"
+          style={{
+            backgroundImage: `url("${paginas[i]!.src}")`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            transform: turning ? "rotateY(-70deg)" : "rotateY(-6deg)",
+            opacity: turning ? 0.35 : 1,
+          }}
+          role="img"
+          aria-label={paginas[i]!.label}
         >
-          <img
-            src="/images/capa.webp"
-            alt="Capa do livro de colorir Minha Aventurinha com a Bíblia"
-            className="book-face h-full w-full rounded-2xl object-cover shadow-[var(--shadow-card)]"
-          />
-          <img
-            src="/images/verso.webp"
-            alt="Verso do livro com a lista de tudo que vem dentro"
-            className="book-face h-full w-full rounded-2xl object-cover shadow-[var(--shadow-card)]"
-            style={{ transform: "rotateY(180deg)" }}
-          />
+          <span className="absolute inset-0 rounded-2xl" />
         </div>
-      </button>
-      <p className="mt-4 text-center text-sm font-bold text-navy/70">
-        👆 Toque no livrinho para ver o {flipped ? "a capa" : "verso"}
+      </div>
+
+      <div className="mt-5 flex items-center justify-center gap-4">
+        <button
+          onClick={() => go(-1)}
+          aria-label="Página anterior"
+          className="cta-toy font-display h-11 w-11 rounded-full text-xl font-extrabold"
+        >
+          ‹
+        </button>
+        <div className="flex gap-2">
+          {paginas.map((p, idx) => (
+            <button
+              key={p.src}
+              onClick={() => idx !== i && (setTurning(true), setTimeout(() => (setI(idx), setTurning(false)), 260))}
+              aria-label={`Ver ${p.label}`}
+              className={`h-3 w-3 rounded-full transition-transform ${idx === i ? "scale-125 bg-primary" : "bg-navy/25"}`}
+            />
+          ))}
+        </div>
+        <button
+          onClick={() => go(1)}
+          aria-label="Próxima página"
+          className="cta-toy font-display h-11 w-11 rounded-full text-xl font-extrabold"
+        >
+          ›
+        </button>
+      </div>
+
+      <p className="mt-3 text-center text-sm font-bold text-navy/70">
+        📖 {paginas[i]!.label} • folheie o livrinho de demonstração
       </p>
     </div>
   );
