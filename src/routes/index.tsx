@@ -10,13 +10,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Ebook para imprimir com 50 páginas de desenhos bíblicos para colorir, versículos e atividades. Ideal para pais e professores. Apenas R$ 29,99.",
+          "Ebook para imprimir com 50 páginas de desenhos bíblicos para colorir, versículos e atividades. Ideal para pais e professores. Super promoção: apenas R$ 19,90.",
       },
       { property: "og:title", content: "Minha Aventurinha com a Bíblia" },
       {
         property: "og:description",
         content:
-          "50 páginas de diversão com Deus: colorir, atividades e versículos para crianças. Baixe e imprima quantas vezes quiser.",
+          "50 páginas de diversão com Deus: colorir, atividades e versículos para crianças. Super promoção R$ 19,90 por tempo limitado. Baixe e imprima quantas vezes quiser.",
       },
       { property: "og:type", content: "product" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -24,6 +24,41 @@ export const Route = createFileRoute("/")({
   }),
   component: Index,
 });
+
+// Promoção: contagem regressiva de 6 horas reiniciando ao acabar.
+function useCountdown(hours: number) {
+  const KEY = "promo_deadline";
+  const getDeadline = () => {
+    if (typeof window === "undefined") return Date.now() + hours * 3600_000;
+    const saved = Number(window.localStorage.getItem(KEY));
+    if (!saved || saved < Date.now()) {
+      const next = Date.now() + hours * 3600_000;
+      window.localStorage.setItem(KEY, String(next));
+      return next;
+    }
+    return saved;
+  };
+  const [deadline, setDeadline] = useState<number>(getDeadline);
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const id = setInterval(() => {
+      const t = Date.now();
+      if (t >= deadline) {
+        const next = t + hours * 3600_000;
+        setDeadline(next);
+        if (typeof window !== "undefined") window.localStorage.setItem(KEY, String(next));
+      }
+      setNow(t);
+    }, 1000);
+    return () => clearInterval(id);
+  }, [deadline, hours]);
+  const rem = Math.max(0, deadline - now);
+  const h = Math.floor(rem / 3600_000);
+  const m = Math.floor((rem % 3600_000) / 60_000);
+  const s = Math.floor((rem % 60_000) / 1000);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${pad(h)}:${pad(m)}:${pad(s)}`;
+}
 
 function Clouds() {
   return (
@@ -165,16 +200,22 @@ const beneficios = [
 ];
 
 function Index() {
+  const countdown = useCountdown(6);
   return (
     <main className="sky-bg relative min-h-screen overflow-hidden text-navy">
       <Clouds />
 
+      {/* BANNER SUPER PROMOÇÃO */}
+      <div className="relative z-10 bg-accent px-4 py-2 text-center font-display text-sm font-extrabold text-accent-foreground shadow-md md:text-base">
+        🔥 SUPER PROMOÇÃO RELÂMPAGO! De R$ 59,90 por apenas R$ 19,90 — oferta termina em breve!
+      </div>
+
       {/* HERO */}
-      <section className="relative mx-auto max-w-6xl px-5 pt-12 pb-16 md:pt-20">
+      <section className="relative mx-auto max-w-6xl px-5 pt-10 pb-16 md:pt-14">
         <div className="grid items-center gap-10 md:grid-cols-2">
           <div className="text-center md:text-left">
-            <span className="animate-wiggle inline-block rounded-full bg-secondary px-4 py-1.5 text-sm font-extrabold text-secondary-foreground shadow-md">
-              ✨ Ebook para imprimir • 50 páginas
+            <span className="animate-wiggle inline-block rounded-full bg-accent px-4 py-1.5 text-sm font-extrabold text-accent-foreground shadow-md">
+              🔥 Super promoção • R$ 19,90 por tempo limitado
             </span>
             <h1 className="font-display mt-5 text-4xl leading-tight font-extrabold text-navy md:text-5xl">
               Minha Aventurinha
@@ -187,12 +228,15 @@ function Index() {
             </p>
             <a
               href="#oferta"
-              className="cta-toy font-display mt-8 inline-flex items-center gap-2 rounded-full px-9 py-4 text-xl font-extrabold"
+              className="cta-toy animate-pulse-toy font-display mt-8 inline-flex items-center gap-2 rounded-full px-9 py-4 text-xl font-extrabold"
             >
               QUERO O LIVRINHO! 🎨
             </a>
             <p className="font-display mt-3 text-lg font-extrabold text-primary">
-              50 páginas em PDF por R$ 29,99 — acesso imediato
+              50 páginas em PDF por R$ 19,90 — acesso imediato
+            </p>
+            <p className="mt-1 text-sm font-bold text-navy/60 line-through">
+              preço anterior R$ 29,99
             </p>
             <p className="mt-1 text-sm font-bold text-navy/60">
               Pagamento seguro • Acesso imediato
@@ -264,11 +308,23 @@ function Index() {
           <Reveal>
             <div className="card-toy relative overflow-hidden rounded-[2rem] p-8 text-center md:p-12">
               <div className="animate-wiggle inline-block rounded-full bg-accent px-5 py-2 font-display text-sm font-extrabold text-accent-foreground">
-                OFERTA DE LANÇAMENTO
+                🔥 SUPER PROMOÇÃO RELÂMPAGO
               </div>
               <h2 className="font-display mt-5 text-3xl font-extrabold md:text-4xl">
                 Leve as 50 páginas hoje mesmo
               </h2>
+
+              <div className="mx-auto mt-6 flex max-w-xs items-center justify-center gap-3 rounded-2xl bg-accent/15 px-4 py-3">
+                <span className="text-2xl">⏳</span>
+                <div className="text-left">
+                  <p className="font-display text-sm font-extrabold text-accent-foreground/80">
+                    A oferta termina em
+                  </p>
+                  <p className="font-display text-2xl font-extrabold tabular-nums text-accent-foreground">
+                    {countdown}
+                  </p>
+                </div>
+              </div>
 
               <ul className="mx-auto mt-7 max-w-md space-y-3 text-left">
                 {[
@@ -293,7 +349,7 @@ function Index() {
                   De R$ 59,90
                 </p>
                 <p className="font-display text-6xl font-extrabold text-primary">
-                  R$ 29,99
+                  R$ 19,90
                 </p>
                 <p className="font-bold text-muted-foreground">pagamento único</p>
               </div>
