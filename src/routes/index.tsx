@@ -10,13 +10,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Ebook para imprimir com 50 páginas de desenhos bíblicos para colorir, versículos e atividades. Ideal para pais e professores. Apenas R$ 29,99.",
+          "Ebook para imprimir com 50 páginas de desenhos bíblicos para colorir, versículos e atividades. Ideal para pais e professores. Super promoção: apenas R$ 19,90.",
       },
       { property: "og:title", content: "Minha Aventurinha com a Bíblia" },
       {
         property: "og:description",
         content:
-          "50 páginas de diversão com Deus: colorir, atividades e versículos para crianças. Baixe e imprima quantas vezes quiser.",
+          "50 páginas de diversão com Deus: colorir, atividades e versículos para crianças. Super promoção R$ 19,90 por tempo limitado. Baixe e imprima quantas vezes quiser.",
       },
       { property: "og:type", content: "product" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -24,6 +24,41 @@ export const Route = createFileRoute("/")({
   }),
   component: Index,
 });
+
+// Promoção: contagem regressiva de 6 horas reiniciando ao acabar.
+function useCountdown(hours: number) {
+  const KEY = "promo_deadline";
+  const getDeadline = () => {
+    if (typeof window === "undefined") return Date.now() + hours * 3600_000;
+    const saved = Number(window.localStorage.getItem(KEY));
+    if (!saved || saved < Date.now()) {
+      const next = Date.now() + hours * 3600_000;
+      window.localStorage.setItem(KEY, String(next));
+      return next;
+    }
+    return saved;
+  };
+  const [deadline, setDeadline] = useState<number>(getDeadline);
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const id = setInterval(() => {
+      const t = Date.now();
+      if (t >= deadline) {
+        const next = t + hours * 3600_000;
+        setDeadline(next);
+        if (typeof window !== "undefined") window.localStorage.setItem(KEY, String(next));
+      }
+      setNow(t);
+    }, 1000);
+    return () => clearInterval(id);
+  }, [deadline, hours]);
+  const rem = Math.max(0, deadline - now);
+  const h = Math.floor(rem / 3600_000);
+  const m = Math.floor((rem % 3600_000) / 60_000);
+  const s = Math.floor((rem % 60_000) / 1000);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${pad(h)}:${pad(m)}:${pad(s)}`;
+}
 
 function Clouds() {
   return (
