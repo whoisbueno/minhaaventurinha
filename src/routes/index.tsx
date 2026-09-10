@@ -190,7 +190,10 @@ function Index() {
             >
               QUERO O LIVRINHO! 🎨
             </a>
-            <p className="mt-3 text-sm font-bold text-navy/60">
+            <p className="font-display mt-3 text-lg font-extrabold text-primary">
+              50 páginas em PDF por R$ 29,99 — acesso imediato
+            </p>
+            <p className="mt-1 text-sm font-bold text-navy/60">
               Pagamento seguro • Acesso imediato
             </p>
           </div>
