@@ -204,12 +204,17 @@ function Index() {
     <main className="sky-bg relative min-h-screen overflow-hidden text-navy">
       <Clouds />
 
+      {/* BANNER SUPER PROMOÇÃO */}
+      <div className="relative z-10 bg-accent px-4 py-2 text-center font-display text-sm font-extrabold text-accent-foreground shadow-md md:text-base">
+        🔥 SUPER PROMOÇÃO RELÂMPAGO! De R$ 59,90 por apenas R$ 19,90 — oferta termina em breve!
+      </div>
+
       {/* HERO */}
-      <section className="relative mx-auto max-w-6xl px-5 pt-12 pb-16 md:pt-20">
+      <section className="relative mx-auto max-w-6xl px-5 pt-10 pb-16 md:pt-14">
         <div className="grid items-center gap-10 md:grid-cols-2">
           <div className="text-center md:text-left">
-            <span className="animate-wiggle inline-block rounded-full bg-secondary px-4 py-1.5 text-sm font-extrabold text-secondary-foreground shadow-md">
-              ✨ Ebook para imprimir • 50 páginas
+            <span className="animate-wiggle inline-block rounded-full bg-accent px-4 py-1.5 text-sm font-extrabold text-accent-foreground shadow-md">
+              🔥 Super promoção • R$ 19,90 por tempo limitado
             </span>
             <h1 className="font-display mt-5 text-4xl leading-tight font-extrabold text-navy md:text-5xl">
               Minha Aventurinha
@@ -222,12 +227,15 @@ function Index() {
             </p>
             <a
               href="#oferta"
-              className="cta-toy font-display mt-8 inline-flex items-center gap-2 rounded-full px-9 py-4 text-xl font-extrabold"
+              className="cta-toy animate-pulse-toy font-display mt-8 inline-flex items-center gap-2 rounded-full px-9 py-4 text-xl font-extrabold"
             >
               QUERO O LIVRINHO! 🎨
             </a>
             <p className="font-display mt-3 text-lg font-extrabold text-primary">
-              50 páginas em PDF por R$ 29,99 — acesso imediato
+              50 páginas em PDF por R$ 19,90 — acesso imediato
+            </p>
+            <p className="mt-1 text-sm font-bold text-navy/60 line-through">
+              preço anterior R$ 29,99
             </p>
             <p className="mt-1 text-sm font-bold text-navy/60">
               Pagamento seguro • Acesso imediato
