@@ -105,7 +105,8 @@ function Book() {
       <div className="animate-float-soft">
         <div
           {...noSave}
-          className="book-page relative aspect-[1035/1500] w-full rounded-2xl bg-card shadow-[var(--shadow-card)]"
+          onClick={() => go(1)}
+          className="book-page relative aspect-[1035/1500] w-full cursor-pointer rounded-2xl bg-card shadow-[var(--shadow-card)]"
           style={{
             backgroundImage: `url("${paginas[i]!.src}")`,
             backgroundSize: "cover",
@@ -113,8 +114,8 @@ function Book() {
             transform: turning ? "rotateY(-70deg)" : "rotateY(-6deg)",
             opacity: turning ? 0.35 : 1,
           }}
-          role="img"
-          aria-label={paginas[i]!.label}
+          role="button"
+          aria-label={`Ver ${paginas[i]!.label} — clique para virar a página`}
         >
           <span className="absolute inset-0 rounded-2xl" />
         </div>
@@ -148,7 +149,7 @@ function Book() {
       </div>
 
       <p className="mt-3 text-center text-sm font-bold text-navy/70">
-        📖 {paginas[i]!.label} • folheie o livrinho de demonstração
+        📖 {paginas[i]!.label} • toque no livrinho ou nas setas para folhear
       </p>
     </div>
   );
@@ -190,7 +191,10 @@ function Index() {
             >
               QUERO O LIVRINHO! 🎨
             </a>
-            <p className="mt-3 text-sm font-bold text-navy/60">
+            <p className="font-display mt-3 text-lg font-extrabold text-primary">
+              50 páginas em PDF por R$ 29,99 — acesso imediato
+            </p>
+            <p className="mt-1 text-sm font-bold text-navy/60">
               Pagamento seguro • Acesso imediato
             </p>
           </div>
