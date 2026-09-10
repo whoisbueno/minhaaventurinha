@@ -200,6 +200,7 @@ const beneficios = [
 ];
 
 function Index() {
+  const countdown = useCountdown(6);
   return (
     <main className="sky-bg relative min-h-screen overflow-hidden text-navy">
       <Clouds />
