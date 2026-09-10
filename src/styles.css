@@ -224,3 +224,11 @@ h1, h2, h3, .font-display { font-family: var(--font-display); }
   inset: 0;
   transform: translateZ(0);
 }
+@utility book-page {
+  transition: transform .26s ease, opacity .26s ease;
+  transform-origin: left center;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+}
