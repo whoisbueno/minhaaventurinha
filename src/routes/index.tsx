@@ -105,7 +105,8 @@ function Book() {
       <div className="animate-float-soft">
         <div
           {...noSave}
-          className="book-page relative aspect-[1035/1500] w-full rounded-2xl bg-card shadow-[var(--shadow-card)]"
+          onClick={() => go(1)}
+          className="book-page relative aspect-[1035/1500] w-full cursor-pointer rounded-2xl bg-card shadow-[var(--shadow-card)]"
           style={{
             backgroundImage: `url("${paginas[i]!.src}")`,
             backgroundSize: "cover",
@@ -113,8 +114,8 @@ function Book() {
             transform: turning ? "rotateY(-70deg)" : "rotateY(-6deg)",
             opacity: turning ? 0.35 : 1,
           }}
-          role="img"
-          aria-label={paginas[i]!.label}
+          role="button"
+          aria-label={`Ver ${paginas[i]!.label} — clique para virar a página`}
         >
           <span className="absolute inset-0 rounded-2xl" />
         </div>
