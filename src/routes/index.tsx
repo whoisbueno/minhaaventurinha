@@ -308,11 +308,23 @@ function Index() {
           <Reveal>
             <div className="card-toy relative overflow-hidden rounded-[2rem] p-8 text-center md:p-12">
               <div className="animate-wiggle inline-block rounded-full bg-accent px-5 py-2 font-display text-sm font-extrabold text-accent-foreground">
-                OFERTA DE LANÇAMENTO
+                🔥 SUPER PROMOÇÃO RELÂMPAGO
               </div>
               <h2 className="font-display mt-5 text-3xl font-extrabold md:text-4xl">
                 Leve as 50 páginas hoje mesmo
               </h2>
+
+              <div className="mx-auto mt-6 flex max-w-xs items-center justify-center gap-3 rounded-2xl bg-accent/15 px-4 py-3">
+                <span className="text-2xl">⏳</span>
+                <div className="text-left">
+                  <p className="font-display text-sm font-extrabold text-accent-foreground/80">
+                    A oferta termina em
+                  </p>
+                  <p className="font-display text-2xl font-extrabold tabular-nums text-accent-foreground">
+                    {countdown}
+                  </p>
+                </div>
+              </div>
 
               <ul className="mx-auto mt-7 max-w-md space-y-3 text-left">
                 {[
@@ -337,7 +349,7 @@ function Index() {
                   De R$ 59,90
                 </p>
                 <p className="font-display text-6xl font-extrabold text-primary">
-                  R$ 29,99
+                  R$ 19,90
                 </p>
                 <p className="font-bold text-muted-foreground">pagamento único</p>
               </div>
