@@ -232,3 +232,7 @@ h1, h2, h3, .font-display { font-family: var(--font-display); }
   -webkit-touch-callout: none;
   -webkit-user-drag: none;
 }
+
+html {
+  scroll-behavior: smooth;
+}

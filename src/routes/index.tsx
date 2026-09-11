@@ -214,13 +214,50 @@ function StickyBar() {
   );
 }
 
+function Nav() {
+  const linkCls =
+    "whitespace-nowrap rounded-full px-3 py-2 text-sm font-extrabold text-navy/80 transition-colors hover:bg-accent hover:text-accent-foreground";
+  return (
+    <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur">
+      <div className="mx-auto flex max-w-6xl items-center gap-2 px-5 py-2.5">
+        <a
+          href="#top"
+          className="font-display mr-auto shrink-0 text-base font-extrabold text-primary"
+        >
+          Minha Aventurinha 📖
+        </a>
+        <nav className="flex items-center gap-1 overflow-x-auto">
+          <a href="#paginas" className={linkCls}>
+            Páginas do ebook
+          </a>
+          <a href="#incluido" className={linkCls}>
+            O que está incluso
+          </a>
+          <a href="#como-funciona" className={linkCls}>
+            Como funciona
+          </a>
+          <a
+            href={KIWIFY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cta-toy whitespace-nowrap rounded-full px-4 py-2 text-sm font-extrabold"
+          >
+            Comprar R$14,90
+          </a>
+        </nav>
+      </div>
+    </header>
+  );
+}
+
 function Index() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
     <main className="min-h-screen bg-background pb-24 text-navy md:pb-0">
+      <Nav />
       {/* HERO */}
-      <section className="sky-bg px-5 pt-10 pb-14">
+      <section id="top" className="sky-bg px-5 pt-10 pb-14">
         <div className="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-2">
           <div className="text-center md:text-left">
             <h1 className="font-display text-3xl font-extrabold leading-tight text-navy sm:text-4xl md:text-5xl">
@@ -271,7 +308,7 @@ function Index() {
       </section>
 
       {/* GALERIA */}
-      <section className="bg-card px-5 py-14">
+      <section id="paginas" className="scroll-mt-16 bg-card px-5 py-14">
         <div className="mx-auto max-w-6xl">
           <Reveal>
             <h2 className="font-display text-center text-2xl font-extrabold sm:text-3xl">
@@ -339,7 +376,7 @@ function Index() {
       </section>
 
       {/* OFERTA */}
-      <section id="oferta" className="sky-bg scroll-mt-4 px-5 py-14">
+      <section id="incluido" className="sky-bg scroll-mt-16 px-5 py-14">
         <div className="mx-auto max-w-2xl">
           <Reveal>
             <div className="card-toy rounded-[2rem] p-6 text-center sm:p-10">
@@ -367,7 +404,7 @@ function Index() {
       </section>
 
       {/* COMO FUNCIONA */}
-      <section className="bg-background px-5 py-14">
+      <section id="como-funciona" className="scroll-mt-16 bg-background px-5 py-14">
         <div className="mx-auto max-w-4xl">
           <Reveal>
             <h2 className="font-display text-center text-2xl font-extrabold sm:text-3xl">
