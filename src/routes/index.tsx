@@ -6,17 +6,17 @@ const KIWIFY_URL = "https://pay.kiwify.com.br/DFqQy5C";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Minha Aventurinha com a Bíblia | Livro de Colorir Infantil" },
+      { title: "Livro Bíblico Infantil para Colorir em PDF | 50 Páginas" },
       {
         name: "description",
         content:
-          "Ebook para imprimir com 50 páginas de desenhos bíblicos para colorir, versículos e atividades. Ideal para pais e professores. Super promoção: apenas R$ 19,90.",
+          "Minha Aventurinha com a Bíblia: ebook em PDF com 50 páginas de desenhos bíblicos para colorir e atividades infantis. Imprima em casa. De R$ 29,90 por R$ 14,90.",
       },
-      { property: "og:title", content: "Minha Aventurinha com a Bíblia" },
+      { property: "og:title", content: "Minha Aventurinha com a Bíblia — 50 páginas em PDF" },
       {
         property: "og:description",
         content:
-          "50 páginas de diversão com Deus: colorir, atividades e versículos para crianças. Super promoção R$ 19,90 por tempo limitado. Baixe e imprima quantas vezes quiser.",
+          "Ebook digital em PDF com 50 páginas de desenhos bíblicos para colorir e atividades para crianças. Pronto para imprimir. Por apenas R$ 14,90.",
       },
       { property: "og:type", content: "product" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -24,66 +24,6 @@ export const Route = createFileRoute("/")({
   }),
   component: Index,
 });
-
-// Promoção: contagem regressiva de 6 horas reiniciando ao acabar.
-function useCountdown(hours: number) {
-  const KEY = "promo_deadline";
-  const getDeadline = () => {
-    if (typeof window === "undefined") return Date.now() + hours * 3600_000;
-    const saved = Number(window.localStorage.getItem(KEY));
-    if (!saved || saved < Date.now()) {
-      const next = Date.now() + hours * 3600_000;
-      window.localStorage.setItem(KEY, String(next));
-      return next;
-    }
-    return saved;
-  };
-  const [deadline, setDeadline] = useState<number>(getDeadline);
-  const [now, setNow] = useState(Date.now());
-  useEffect(() => {
-    const id = setInterval(() => {
-      const t = Date.now();
-      if (t >= deadline) {
-        const next = t + hours * 3600_000;
-        setDeadline(next);
-        if (typeof window !== "undefined") window.localStorage.setItem(KEY, String(next));
-      }
-      setNow(t);
-    }, 1000);
-    return () => clearInterval(id);
-  }, [deadline, hours]);
-  const rem = Math.max(0, deadline - now);
-  const h = Math.floor(rem / 3600_000);
-  const m = Math.floor((rem % 3600_000) / 60_000);
-  const s = Math.floor((rem % 60_000) / 1000);
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${pad(h)}:${pad(m)}:${pad(s)}`;
-}
-
-function Clouds() {
-  return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {[
-        { top: "8%", scale: 1, delay: "0s", dur: "48s" },
-        { top: "26%", scale: 0.7, delay: "-14s", dur: "62s" },
-        { top: "48%", scale: 1.3, delay: "-30s", dur: "72s" },
-      ].map((c, i) => (
-        <div
-          key={i}
-          className="animate-cloud absolute opacity-70"
-          style={{ top: c.top, animationDelay: c.delay, animationDuration: c.dur }}
-        >
-          <div style={{ transform: `scale(${c.scale})` }}>
-            <div className="relative h-10 w-28 rounded-full bg-card">
-              <div className="absolute -top-5 left-5 h-14 w-14 rounded-full bg-card" />
-              <div className="absolute -top-3 left-14 h-10 w-10 rounded-full bg-card" />
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
 
 function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -93,7 +33,7 @@ function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
     if (!el) return;
     const io = new IntersectionObserver(
       (entries) => entries[0]?.isIntersecting && setShown(true),
-      { threshold: 0.15 },
+      { threshold: 0.12 },
     );
     io.observe(el);
     return () => io.disconnect();
@@ -109,158 +49,266 @@ function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
   );
 }
 
-const paginas = [
-  { src: "/images/capa.webp", label: "Capa" },
-  { src: "/images/pag1.webp", label: "Página 1 — A Criação" },
-  { src: "/images/pag2.webp", label: "Página 2 — Caça-palavras" },
-  { src: "/images/pag3.webp", label: "Página 3 — Noé e a Arca" },
-  { src: "/images/verso.webp", label: "Verso" },
-];
-
-function Book() {
-  const [i, setI] = useState(0);
-  const [turning, setTurning] = useState(false);
-  const total = paginas.length;
-
-  const go = (dir: number) => {
-    setTurning(true);
-    setTimeout(() => {
-      setI((p) => (p + dir + total) % total);
-      setTurning(false);
-    }, 260);
-  };
-
-  const noSave = {
-    onContextMenu: (e: React.MouseEvent) => e.preventDefault(),
-    onDragStart: (e: React.DragEvent) => e.preventDefault(),
-  };
-
+function BuyButton({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className="book-scene mx-auto w-full max-w-[340px] select-none">
-      <div className="animate-float-soft">
-        <div
-          {...noSave}
-          onClick={() => go(1)}
-          className="book-page relative aspect-[1035/1500] w-full cursor-pointer rounded-2xl bg-card shadow-[var(--shadow-card)]"
-          style={{
-            backgroundImage: `url("${paginas[i]!.src}")`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            transform: turning ? "rotateY(-70deg)" : "rotateY(-6deg)",
-            opacity: turning ? 0.35 : 1,
-          }}
-          role="button"
-          aria-label={`Ver ${paginas[i]!.label} — clique para virar a página`}
-        >
-          <span className="absolute inset-0 rounded-2xl" />
-        </div>
-      </div>
+    <a
+      href={KIWIFY_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`cta-toy font-display inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 text-center text-lg font-extrabold leading-tight sm:text-xl ${className}`}
+    >
+      {children}
+    </a>
+  );
+}
 
-      <div className="mt-5 flex items-center justify-center gap-4">
-        <button
-          onClick={() => go(-1)}
-          aria-label="Página anterior"
-          className="cta-toy font-display h-11 w-11 rounded-full text-xl font-extrabold"
-        >
-          ‹
-        </button>
-        <div className="flex gap-2">
-          {paginas.map((p, idx) => (
-            <button
-              key={p.src}
-              onClick={() => idx !== i && (setTurning(true), setTimeout(() => (setI(idx), setTurning(false)), 260))}
-              aria-label={`Ver ${p.label}`}
-              className={`h-3 w-3 rounded-full transition-transform ${idx === i ? "scale-125 bg-primary" : "bg-navy/25"}`}
-            />
-          ))}
-        </div>
-        <button
-          onClick={() => go(1)}
-          aria-label="Próxima página"
-          className="cta-toy font-display h-11 w-11 rounded-full text-xl font-extrabold"
-        >
-          ›
-        </button>
-      </div>
-
-      <p className="mt-3 text-center text-sm font-bold text-navy/70">
-        📖 {paginas[i]!.label} • toque no livrinho ou nas setas para folhear
+function Price({ big = false }: { big?: boolean }) {
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <p className="text-base font-bold text-muted-foreground line-through">De R$ 29,90</p>
+      <p
+        className={`font-display font-extrabold leading-none text-primary ${
+          big ? "text-6xl sm:text-7xl" : "text-5xl sm:text-6xl"
+        }`}
+      >
+        R$ 14,90
       </p>
+      <p className="text-sm font-bold text-navy/70">Pagamento único. Não é assinatura.</p>
     </div>
   );
 }
 
-const beneficios = [
-  { icon: "📖", t: "Histórias bíblicas incríveis", d: "Passagens contadas de um jeitinho simples que a criança entende." },
-  { icon: "✏️", t: "Desenhos para colorir", d: "Traços grossos e fáceis, perfeitos para lápis de cor e giz." },
-  { icon: "🧩", t: "Atividades divertidas", d: "Jogos, labirintos, caça-palavras e ligue os pontos." },
-  { icon: "💛", t: "Versículos para guardar", d: "Cada página ensina uma verdade linda sobre o amor de Deus." },
-  { icon: "🖨️", t: "Imprima quantas vezes quiser", d: "PDF em alta qualidade, A4. Serve para casa, escola e igreja." },
-  { icon: "⚡", t: "Acesso na hora", d: "Baixe imediatamente após o pagamento. Sem esperar entrega." },
+const paginas = [
+  { src: "/images/capa.webp", label: "Capa do ebook" },
+  { src: "/images/pag1.webp", label: "Página: A Criação" },
+  { src: "/images/pag2.webp", label: "Página: Caça-palavras da Criação" },
+  { src: "/images/pag3.webp", label: "Página: Noé e a Arca" },
+  { src: "/images/verso.webp", label: "Contracapa do ebook" },
 ];
 
-function Index() {
-  const countdown = useCountdown(6);
+const noSave = {
+  onContextMenu: (e: React.MouseEvent) => e.preventDefault(),
+  onDragStart: (e: React.DragEvent) => e.preventDefault(),
+};
+
+function Galeria() {
   return (
-    <main className="sky-bg relative min-h-screen overflow-hidden text-navy">
-      <Clouds />
+    <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-4 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0">
+      {paginas.map((p, i) => (
+        <div
+          key={p.src}
+          {...noSave}
+          className="book-page card-toy w-[80vw] max-w-[340px] shrink-0 snap-center overflow-hidden rounded-3xl md:w-auto md:max-w-none"
+        >
+          <div
+            role="img"
+            aria-label={p.label}
+            className="aspect-[1035/1500] w-full bg-card"
+            style={{
+              backgroundImage: `url("${p.src}")`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          />
+          <p className="px-3 py-3 text-center text-sm font-bold text-navy/70">
+            {i + 1}. {p.label}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
 
-      {/* BANNER SUPER PROMOÇÃO */}
-      <div className="relative z-10 bg-accent px-4 py-2 text-center font-display text-sm font-extrabold text-accent-foreground shadow-md md:text-base">
-        🔥 SUPER PROMOÇÃO RELÂMPAGO! De R$ 59,90 por apenas R$ 19,90 — oferta termina em breve!
+const beneficiosHero = [
+  "50 páginas",
+  "Desenhos fáceis de colorir",
+  "Atividades bíblicas infantis",
+  "Arquivo PDF pronto para imprimir",
+  "Acesso digital após a compra",
+];
+
+const valores = [
+  { i: "🎨", t: "Estimula a criatividade" },
+  { i: "✏️", t: "Ajuda na coordenação e concentração" },
+  { i: "📖", t: "Aproxima a criança das histórias bíblicas" },
+  { i: "❤️", t: "Ensina valores como amor, bondade, empatia e fé" },
+  { i: "🖨️", t: "Basta imprimir e começar" },
+];
+
+const publico = [
+  { i: "👨‍👩‍👧", t: "Pais e mães" },
+  { i: "⛪", t: "Ministério infantil" },
+  { i: "📖", t: "Escola bíblica" },
+  { i: "👩‍🏫", t: "Professores e educadores" },
+  { i: "🎁", t: "Presente para crianças" },
+  { i: "🏠", t: "Atividades para fazer em casa" },
+];
+
+const recebe = [
+  { i: "📖", t: "Ebook digital com 50 páginas" },
+  { i: "🎨", t: "Desenhos bíblicos infantis para colorir" },
+  { i: "✏️", t: "Atividades educativas" },
+  { i: "❤️", t: "Mensagens sobre fé, amor, bondade e empatia" },
+  { i: "📥", t: "Arquivo digital em PDF" },
+  { i: "🖨️", t: "Pronto para imprimir" },
+];
+
+const passos = [
+  { n: "1", t: "Faça sua compra", d: "Clique no botão e finalize o pagamento pela Kiwify." },
+  { n: "2", t: "Receba seu ebook", d: "Após a confirmação, você recebe acesso ao arquivo digital." },
+  { n: "3", t: "Imprima e divirta-se", d: "Escolha as páginas, imprima e deixe a criança colorir." },
+];
+
+const faq = [
+  {
+    q: "É um livro físico?",
+    a: "Não. Minha Aventurinha com a Bíblia é um produto digital em PDF. Você recebe o arquivo e pode imprimir as páginas.",
+  },
+  { q: "Quantas páginas possui?", a: "O ebook possui 50 páginas." },
+  {
+    q: "Como recebo o produto?",
+    a: "Após a confirmação da compra, o acesso ao produto digital é disponibilizado pela plataforma.",
+  },
+  {
+    q: "Posso imprimir?",
+    a: "Sim. O material foi criado para que você possa imprimir e utilizar com a criança.",
+  },
+  {
+    q: "Para qual idade é indicado?",
+    a: "O material foi desenvolvido especialmente para crianças, com desenhos simples, traços grandes e atividades fáceis de entender.",
+  },
+  { q: "É uma assinatura?", a: "Não. O pagamento é feito uma única vez." },
+];
+
+function StickyBar() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setShow(window.scrollY > 520);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  return (
+    <div
+      className={`fixed inset-x-0 bottom-0 z-50 border-t border-border bg-card/95 px-4 py-3 backdrop-blur transition-transform duration-300 md:hidden ${
+        show ? "translate-y-0" : "translate-y-full"
+      }`}
+    >
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+        <div className="min-w-0">
+          <p className="truncate font-display text-sm font-extrabold text-navy">
+            Ebook 50 páginas
+          </p>
+          <p className="font-display text-lg font-extrabold leading-none text-primary">R$ 14,90</p>
+        </div>
+        <a
+          href={KIWIFY_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="cta-toy font-display shrink-0 rounded-full px-6 py-3 text-base font-extrabold"
+        >
+          COMPRAR
+        </a>
       </div>
+    </div>
+  );
+}
 
+function Index() {
+  const [open, setOpen] = useState<number | null>(0);
+
+  return (
+    <main className="min-h-screen bg-background pb-24 text-navy md:pb-0">
       {/* HERO */}
-      <section className="relative mx-auto max-w-6xl px-5 pt-10 pb-16 md:pt-14">
-        <div className="grid items-center gap-10 md:grid-cols-2">
+      <section className="sky-bg px-5 pt-10 pb-14">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-2">
           <div className="text-center md:text-left">
-            <span className="animate-wiggle inline-block rounded-full bg-accent px-4 py-1.5 text-sm font-extrabold text-accent-foreground shadow-md">
-              🔥 Super promoção • R$ 19,90 por tempo limitado
-            </span>
-            <h1 className="font-display mt-5 text-4xl leading-tight font-extrabold text-navy md:text-5xl">
-              Minha Aventurinha
-              <span className="block text-primary">com a Bíblia</span>
+            <h1 className="font-display text-3xl font-extrabold leading-tight text-navy sm:text-4xl md:text-5xl">
+              50 PÁGINAS DE DIVERSÃO COM A BÍBLIA 🎨📖
             </h1>
             <p className="mt-4 text-lg font-semibold text-navy/80">
-              Um livro de colorir e atividades que ensina as crianças sobre Deus
-              brincando. Baixe, imprima e veja os pequenos se apaixonarem pelas
-              histórias da Bíblia.
+              Um livro infantil em PDF com desenhos para colorir e atividades bíblicas para as
+              crianças aprenderem enquanto se divertem.
             </p>
-            <a
-              href="#oferta"
-              className="cta-toy animate-pulse-toy font-display mt-8 inline-flex items-center gap-2 rounded-full px-9 py-4 text-xl font-extrabold"
-            >
-              QUERO O LIVRINHO! 🎨
-            </a>
-            <p className="font-display mt-3 text-lg font-extrabold text-primary">
-              50 páginas em PDF por R$ 19,90 — acesso imediato
-            </p>
-            <p className="mt-1 text-sm font-bold text-navy/60 line-through">
-              preço anterior R$ 29,99
-            </p>
-            <p className="mt-1 text-sm font-bold text-navy/60">
-              Pagamento seguro • Acesso imediato
-            </p>
+
+            <ul className="mx-auto mt-6 max-w-md space-y-2 text-left md:mx-0">
+              {beneficiosHero.map((b) => (
+                <li key={b} className="flex items-start gap-3 text-base font-bold">
+                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent text-sm text-accent-foreground">
+                    ✓
+                  </span>
+                  {b}
+                </li>
+              ))}
+            </ul>
           </div>
-          <Book />
+
+          <div {...noSave} className="mx-auto w-full max-w-[330px]">
+            <div className="book-page card-toy overflow-hidden rounded-3xl">
+              <div
+                role="img"
+                aria-label="Capa do ebook Minha Aventurinha com a Bíblia"
+                className="aspect-[1035/1500] w-full"
+                style={{
+                  backgroundImage: 'url("/images/capa.webp")',
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="md:col-span-2">
+            <div className="mx-auto max-w-md text-center">
+              <Price big />
+              <BuyButton className="mt-5">QUERO MEU LIVRO BÍBLICO 📖</BuyButton>
+              <p className="mt-3 text-sm font-bold text-navy/70">
+                🔒 Compra segura pela Kiwify • 📥 Produto digital • 🖨️ Pronto para imprimir
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* GALERIA */}
+      <section className="bg-card px-5 py-14">
+        <div className="mx-auto max-w-6xl">
+          <Reveal>
+            <h2 className="font-display text-center text-2xl font-extrabold sm:text-3xl">
+              VEJA ALGUMAS PÁGINAS DO EBOOK 👇
+            </h2>
+          </Reveal>
+          <div className="mt-8">
+            <Galeria />
+          </div>
+          <p className="mt-4 text-center text-base font-semibold text-navy/80">
+            E isso é apenas uma amostra. O livro completo possui 50 páginas para a criança colorir,
+            aprender e se divertir.
+          </p>
+          <div className="mx-auto mt-7 max-w-md">
+            <BuyButton>QUERO AS 50 PÁGINAS</BuyButton>
+          </div>
         </div>
       </section>
 
       {/* BENEFÍCIOS */}
-      <section className="relative bg-card/70 py-16 backdrop-blur-sm">
-        <div className="mx-auto max-w-6xl px-5">
+      <section className="bg-background px-5 py-14">
+        <div className="mx-auto max-w-5xl">
           <Reveal>
-            <h2 className="font-display text-center text-3xl font-extrabold md:text-4xl">
-              Tudo que vem dentro do livrinho 🌈
+            <h2 className="font-display text-center text-2xl font-extrabold sm:text-3xl">
+              MENOS TELA. MAIS CRIATIVIDADE, APRENDIZADO E FÉ. ❤️
             </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-center text-base font-semibold text-navy/80">
+              Uma atividade simples e divertida para criar momentos especiais com as crianças
+              enquanto elas conhecem valores e histórias inspiradas na Bíblia.
+            </p>
           </Reveal>
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {beneficios.map((b, i) => (
-              <Reveal key={b.t} delay={i * 80}>
-                <div className="card-toy h-full rounded-3xl p-6 transition-transform hover:-translate-y-1.5">
-                  <div className="text-4xl">{b.icon}</div>
-                  <h3 className="font-display mt-3 text-xl font-extrabold">{b.t}</h3>
-                  <p className="mt-2 font-semibold text-muted-foreground">{b.d}</p>
+          <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {valores.map((v, i) => (
+              <Reveal key={v.t} delay={i * 60}>
+                <div className="card-toy flex h-full items-center gap-4 rounded-3xl p-5">
+                  <span className="text-3xl">{v.i}</span>
+                  <p className="font-display text-lg font-extrabold leading-snug">{v.t}</p>
                 </div>
               </Reveal>
             ))}
@@ -269,115 +317,139 @@ function Index() {
       </section>
 
       {/* PARA QUEM */}
-      <section className="py-16">
-        <div className="mx-auto max-w-4xl px-5">
+      <section className="bg-card px-5 py-14">
+        <div className="mx-auto max-w-5xl">
           <Reveal>
-            <div className="card-toy rounded-[2rem] p-8 text-center md:p-12">
-              <h2 className="font-display text-3xl font-extrabold">
-                Feito para pais e professores 💚
-              </h2>
-              <p className="mt-4 text-lg font-semibold text-muted-foreground">
-                Se você quer tirar as crianças da tela e colocar algo bom no
-                coração delas, esse material é pra você. Use em casa, na escola
-                dominical, no culto infantil ou na sala de aula.
-              </p>
-              <div className="mt-8 grid gap-4 sm:grid-cols-3">
-                {["👨‍👩‍👧 Famílias", "⛪ Escola dominical", "🍎 Professores"].map((x) => (
-                  <div
-                    key={x}
-                    className="rounded-2xl bg-secondary px-4 py-4 font-display text-lg font-extrabold text-secondary-foreground"
-                  >
-                    {x}
-                  </div>
-                ))}
-              </div>
-              <blockquote className="mt-10 rounded-2xl bg-sun/40 p-6 font-display text-xl font-bold italic">
-                “Deixem vir a mim as crianças, pois delas é o Reino de Deus.”
-                <span className="mt-2 block text-base not-italic opacity-70">
-                  Marcos 10:14
-                </span>
-              </blockquote>
-            </div>
+            <h2 className="font-display text-center text-2xl font-extrabold sm:text-3xl">
+              PERFEITO PARA QUEM QUER ENSINAR DE UM JEITO DIVERTIDO
+            </h2>
           </Reveal>
+          <div className="mt-9 grid grid-cols-2 gap-4 lg:grid-cols-3">
+            {publico.map((p) => (
+              <div
+                key={p.t}
+                className="rounded-3xl bg-secondary px-4 py-6 text-center text-secondary-foreground"
+              >
+                <div className="text-3xl">{p.i}</div>
+                <p className="font-display mt-2 text-base font-extrabold">{p.t}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* OFERTA */}
-      <section id="oferta" className="scroll-mt-6 pb-20">
-        <div className="mx-auto max-w-3xl px-5">
+      <section id="oferta" className="sky-bg scroll-mt-4 px-5 py-14">
+        <div className="mx-auto max-w-2xl">
           <Reveal>
-            <div className="card-toy relative overflow-hidden rounded-[2rem] p-8 text-center md:p-12">
-              <div className="animate-wiggle inline-block rounded-full bg-accent px-5 py-2 font-display text-sm font-extrabold text-accent-foreground">
-                🔥 SUPER PROMOÇÃO RELÂMPAGO
-              </div>
-              <h2 className="font-display mt-5 text-3xl font-extrabold md:text-4xl">
-                Leve as 50 páginas hoje mesmo
+            <div className="card-toy rounded-[2rem] p-6 text-center sm:p-10">
+              <h2 className="font-display text-2xl font-extrabold sm:text-3xl">
+                O QUE VOCÊ RECEBE HOJE
               </h2>
-
-              <div className="mx-auto mt-6 flex max-w-xs items-center justify-center gap-3 rounded-2xl bg-accent/15 px-4 py-3">
-                <span className="text-2xl">⏳</span>
-                <div className="text-left">
-                  <p className="font-display text-sm font-extrabold text-accent-foreground/80">
-                    A oferta termina em
-                  </p>
-                  <p className="font-display text-2xl font-extrabold tabular-nums text-accent-foreground">
-                    {countdown}
-                  </p>
-                </div>
-              </div>
-
               <ul className="mx-auto mt-7 max-w-md space-y-3 text-left">
-                {[
-                  "50 páginas de diversão com Deus",
-                  "Desenhos bíblicos para colorir",
-                  "Atividades educativas e jogos",
-                  "Versículos e ensinamentos",
-                  "PDF em alta qualidade para imprimir sempre",
-                  "Acesso imediato e vitalício",
-                ].map((li) => (
-                  <li key={li} className="flex items-start gap-3 font-bold">
-                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent text-sm text-accent-foreground">
-                      ✓
-                    </span>
-                    {li}
+                {recebe.map((r) => (
+                  <li key={r.t} className="flex items-start gap-3 text-base font-bold">
+                    <span className="text-xl">{r.i}</span>
+                    {r.t}
                   </li>
                 ))}
               </ul>
-
               <div className="mt-9">
-                <p className="font-bold text-muted-foreground line-through">
-                  De R$ 59,90
-                </p>
-                <p className="font-display text-6xl font-extrabold text-primary">
-                  R$ 19,90
-                </p>
-                <p className="font-bold text-muted-foreground">pagamento único</p>
+                <Price big />
               </div>
-
-              <a
-                href={KIWIFY_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="cta-toy animate-pulse-toy font-display mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full px-8 py-5 text-2xl font-extrabold"
-              >
-                COMPRAR AGORA 🎉
-              </a>
-              <p className="mt-4 text-sm font-bold text-muted-foreground">
-                🔒 Compra 100% segura via Kiwify • Garantia de 7 dias
+              <BuyButton className="mt-6">SIM, QUERO GARANTIR O MEU</BuyButton>
+              <p className="mt-3 text-sm font-bold text-navy/70">
+                Pagamento único • Produto digital • Acesso após a compra
               </p>
             </div>
           </Reveal>
         </div>
       </section>
 
-      <footer className="bg-navy py-8 text-center">
+      {/* COMO FUNCIONA */}
+      <section className="bg-background px-5 py-14">
+        <div className="mx-auto max-w-4xl">
+          <Reveal>
+            <h2 className="font-display text-center text-2xl font-extrabold sm:text-3xl">
+              É MUITO SIMPLES
+            </h2>
+          </Reveal>
+          <div className="mt-9 grid gap-4 md:grid-cols-3">
+            {passos.map((p) => (
+              <div key={p.n} className="card-toy rounded-3xl p-6 text-center">
+                <div className="font-display mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary text-2xl font-extrabold text-primary-foreground">
+                  {p.n}
+                </div>
+                <h3 className="font-display mt-4 text-xl font-extrabold">{p.t}</h3>
+                <p className="mt-2 font-semibold text-muted-foreground">{p.d}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mx-auto mt-7 max-w-2xl rounded-2xl bg-sun/40 p-4 text-center text-base font-bold">
+            📥 Este é um produto 100% digital. Nada será enviado pelos Correios.
+          </p>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="bg-card px-5 py-14">
+        <div className="mx-auto max-w-2xl">
+          <Reveal>
+            <h2 className="font-display text-center text-2xl font-extrabold sm:text-3xl">
+              PERGUNTAS FREQUENTES
+            </h2>
+          </Reveal>
+          <div className="mt-8 space-y-3">
+            {faq.map((f, i) => (
+              <div key={f.q} className="overflow-hidden rounded-2xl border-2 border-border">
+                <button
+                  onClick={() => setOpen(open === i ? null : i)}
+                  aria-expanded={open === i}
+                  className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-display text-base font-extrabold"
+                >
+                  {f.q}
+                  <span className="shrink-0 text-xl">{open === i ? "−" : "+"}</span>
+                </button>
+                {open === i && (
+                  <p className="px-5 pb-5 text-base font-semibold text-muted-foreground">{f.a}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA FINAL */}
+      <section className="sky-bg px-5 py-16">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="font-display text-2xl font-extrabold sm:text-3xl">
+            TRANSFORME O MOMENTO DE COLORIR EM UM MOMENTO DE APRENDIZADO ❤️
+          </h2>
+          <p className="mt-4 text-base font-semibold text-navy/80">
+            São 50 páginas para criar momentos divertidos, educativos e especiais com as crianças.
+          </p>
+          <div className="mt-8">
+            <Price big />
+          </div>
+          <div className="mx-auto mt-6 max-w-md">
+            <BuyButton>QUERO MINHA AVENTURINHA COM A BÍBLIA</BuyButton>
+          </div>
+          <p className="mt-3 text-sm font-bold text-navy/70">
+            🔒 Compra segura • 📥 Produto digital • 🖨️ PDF para imprimir
+          </p>
+        </div>
+      </section>
+
+      <footer className="bg-navy px-5 py-8 text-center">
         <p className="font-display text-lg font-extrabold text-secondary">
-          Feito com amor para crianças 🌈
+          Minha Aventurinha com a Bíblia
         </p>
         <p className="mt-2 text-sm font-semibold text-card/70">
-          © {new Date().getFullYear()} Minha Aventurinha com a Bíblia
+          © {new Date().getFullYear()} • Produto digital em PDF • minhaaventurinha.shop
         </p>
       </footer>
+
+      <StickyBar />
     </main>
   );
 }
