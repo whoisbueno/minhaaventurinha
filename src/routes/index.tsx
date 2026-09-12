@@ -396,6 +396,24 @@ function Index() {
         </div>
       </section>
 
+      {/* AVALIAÇÕES */}
+      <section className="relative bg-background px-5 py-12">
+        <div className="mx-auto max-w-6xl">
+          <Reveal>
+            <div className="mb-6 text-center">
+              <p className="star-row text-2xl">★★★★★</p>
+              <h2 className="font-display mt-1 text-xl font-extrabold sm:text-2xl">
+                Pais, mães e professores já compraram 🥰
+              </h2>
+              <p className="mt-1 text-sm font-bold text-navy/70">
+                Veja o que dizem quem já baixou o PDF pra colorir com as crianças
+              </p>
+            </div>
+          </Reveal>
+          <Avaliacoes />
+        </div>
+      </section>
+
       {/* GALERIA */}
       <section id="paginas" className="scroll-mt-16 bg-card px-5 py-14">
         <div className="mx-auto max-w-6xl">
