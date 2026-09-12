@@ -219,14 +219,17 @@ function Nav() {
     "whitespace-nowrap rounded-full px-3 py-2 text-sm font-extrabold text-navy/80 transition-colors hover:bg-accent hover:text-accent-foreground";
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center gap-2 px-5 py-2.5">
+      <div className="mx-auto flex max-w-6xl items-center gap-2 px-4 py-2.5 sm:px-5">
         <a
           href="#top"
-          className="font-display mr-auto shrink-0 text-base font-extrabold text-primary"
+          className="font-display mr-auto hidden shrink-0 text-base font-extrabold text-primary sm:block"
         >
           Minha Aventurinha 📖
         </a>
-        <nav className="flex items-center gap-1 overflow-x-auto">
+        <nav
+          className="flex w-full items-center gap-1 overflow-x-auto sm:w-auto"
+          aria-label="Navegação principal"
+        >
           <a href="#paginas" className={linkCls}>
             Páginas do ebook
           </a>
@@ -240,7 +243,7 @@ function Nav() {
             href={KIWIFY_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="cta-toy whitespace-nowrap rounded-full px-4 py-2 text-sm font-extrabold"
+            className="cta-toy shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-sm font-extrabold"
           >
             Comprar R$14,90
           </a>
