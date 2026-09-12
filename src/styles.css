@@ -245,8 +245,6 @@ html {
 @utility review-track {
   animation: review-marquee 45s linear infinite;
   width: max-content;
-}
-@utility review-track:hover {
-  animation-play-state: paused;
+  &:hover { animation-play-state: paused; }
 }
 @utility star-row { color: oklch(0.74 0.19 70); letter-spacing: 1px; }
