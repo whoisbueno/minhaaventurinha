@@ -127,6 +127,92 @@ const beneficiosHero = [
   "Acesso digital após a compra",
 ];
 
+const avaliacoes = [
+  {
+    nome: "Marina S.",
+    texto:
+      "Comprei o PDF pra minha filha de 6 anos e ela amou! Fica horas colorindo as histórias da Bíblia. Já imprimi várias páginas.",
+    estrelas: 5,
+  },
+  {
+    nome: "Pastor João",
+    texto:
+      "Uso no ministério infantil da igreja. As crianças aprendem versículos enquanto colorem. Material muito bem feito!",
+    estrelas: 5,
+  },
+  {
+    nome: "Fernanda L.",
+    texto:
+      "Chegou rápido o acesso depois da compra. Meu filho adorou a página de Noé e a arca. Recomendo demais pra quem quer tirar do celular.",
+    estrelas: 5,
+  },
+  {
+    nome: "Profª Carla",
+    texto:
+      "Sou professora da escolinha bíblica e esse ebook salvou minhas aulas. 50 páginas com desenhos fáceis e atividades. Valeu cada centavo.",
+    estrelas: 5,
+  },
+  {
+    nome: "Rafael M.",
+    texto:
+      "Comprei pra fazer atividade em casa com o caçula. Ele colori e ainda aprende a história. Imprimo conforme vamos usando. Top demais!",
+    estrelas: 5,
+  },
+  {
+    nome: "Patrícia R.",
+    texto:
+      "Melhor compra! O PDF tem 50 páginas lindas e meu sobrinho ficou encantado com os desenhos da Criação. Já indiquei pra todas as mães.",
+    estrelas: 5,
+  },
+  {
+    nome: "Diego T.",
+    texto:
+      "Prático e barato. Paguei, recebi o acesso e imprimi na hora. As crianças colorindo e aprendendo a Palavra ao mesmo tempo. Show!",
+    estrelas: 5,
+  },
+  {
+    nome: "Aline F.",
+    texto:
+      "Adorei a qualidade dos desenhos, traços grandes e fáceis das crianças colorirem. Minha filha pede pra fazer todo dia. Compra certa!",
+    estrelas: 5,
+  },
+];
+
+function Estrelas({ n }: { n: number }) {
+  return (
+    <div className="star-row text-lg" aria-label={`${n} de 5 estrelas`}>
+      {"★★★★★".slice(0, n)}
+      <span className="opacity-25">{"★★★★★".slice(n)}</span>
+    </div>
+  );
+}
+
+function Avaliacoes() {
+  const lista = [...avaliacoes, ...avaliacoes];
+  return (
+    <div className="overflow-hidden">
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-background to-transparent sm:w-16" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-background to-transparent sm:w-16" />
+      <div className="review-track flex gap-4">
+        {lista.map((a, i) => (
+          <div
+            key={i}
+            className="card-toy flex w-[280px] shrink-0 flex-col gap-2 rounded-3xl p-5 sm:w-[340px]"
+          >
+            <Estrelas n={a.estrelas} />
+            <p className="text-sm font-semibold leading-relaxed text-navy/85">
+              "{a.texto}"
+            </p>
+            <p className="font-display mt-1 text-base font-extrabold text-primary">
+              {a.nome} <span className="text-xs font-bold text-grass">✓ Compra verificada</span>
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 const valores = [
   { i: "🎨", t: "Estimula a criatividade" },
   { i: "✏️", t: "Ajuda na coordenação e concentração" },
